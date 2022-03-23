@@ -257,7 +257,8 @@ public class Transportation implements
     US_STATE("us-state"),
     CA_TRANSCANADA("ca-transcanada"),
     GB_MOTORWAY("gb-motorway"),
-    GB_TRUNK("gb-trunk");
+    GB_TRUNK("gb-trunk"),
+    E_ROAD("e-road");
 
     final String name;
 

@@ -49,6 +49,7 @@ import com.onthegomap.planetiler.VectorTile;
 import com.onthegomap.planetiler.basemap.BasemapProfile;
 import com.onthegomap.planetiler.basemap.generated.OpenMapTilesSchema;
 import com.onthegomap.planetiler.basemap.generated.Tables;
+import com.onthegomap.planetiler.basemap.layers.Transportation.RouteNetwork;
 import com.onthegomap.planetiler.basemap.util.LanguageUtils;
 import com.onthegomap.planetiler.collection.Hppc;
 import com.onthegomap.planetiler.config.PlanetilerConfig;
@@ -204,7 +205,17 @@ public class TransportationName implements
   public void process(Tables.OsmHighwayLinestring element, FeatureCollector features) {
     String ref = element.ref();
     List<Transportation.RouteRelation> relations = transportation.getRouteRelations(element);
-    Transportation.RouteRelation relation = relations.isEmpty() ? null : relations.get(0);
+
+    Transportation.RouteRelation relation;
+    if (relations.isEmpty()) {
+      relation = null;
+    } else {
+      relation = relations
+        .stream()
+        .filter(rel -> rel.networkType() != RouteNetwork.E_ROAD )
+        .findFirst()
+        .orElseGet(() -> relations.get(0));
+    }
     if (relation != null && nullIfEmpty(relation.ref()) != null) {
       ref = relation.ref();
     }
